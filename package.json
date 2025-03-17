@@ -1,0 +1,32 @@
+{
+  "name": "driversFriend-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsnd --exit-child --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "build": "tsc",
+    "lint": "biome check ./src",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "pnpm biome check --diagnostic-level=error"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/express": "^5.0.0",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.2"
+  }
+}
