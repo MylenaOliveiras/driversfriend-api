@@ -1,23 +1,25 @@
 {
-  "name": "driversFriend-api",
+  "name": "driversfriend-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "tsnd --exit-child --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "build": "tsc",
-    "lint": "biome check ./src",
+    "check": "biome check ./src",
+    "lint": "biome lint --write ./src",
     "prepare": "husky"
   },
   "lint-staged": {
     "*.ts": [
-      "pnpm biome check --diagnostic-level=error"
+      "pnpm biome check --fix"
     ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "6.5.0",
     "express": "^4.21.2"
   },
   "devDependencies": {

@@ -1,12 +1,13 @@
 import express from "express";
 
 const app = express();
-const port = 3000;
+const port = 5000;
 
-app.get("/", (req, res) => {
-  res.send("Hello, World");
+app.get("/", (_req, res) => {
+	res.send("Hello, World");
 });
 
 app.listen(port, () => {
-  console.log(`App de exemplo esta rodando na porta ${port}`);
+	// biome-ignore lint/suspicious/noConsole: <explanation>
+	console.log(`App de exemplo esta rodando na porta ${port}`);
 });
