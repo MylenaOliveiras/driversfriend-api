@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
+import { AppError } from "../utils/AppError";
 
 export const UserSchema = z.object({
 	id: z.number(),
@@ -15,39 +16,32 @@ export const UserSchema = z.object({
 		),
 });
 
+export const NewUserSchema = UserSchema.omit({ id: true });
 export const SimplifyUserSchema = UserSchema.pick({ email: true }).extend({
 	senha: z.string(),
 });
 
-export const validateNewUser = (data: unknown) => {
-	try {
-		const user = UserSchema.parse(data);
-		return user;
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			throw new Error(error.errors.map((err) => err.message).join("\n"));
+const validateSchema =
+	(schema: z.ZodSchema) =>
+	(req: Request, res: Response, next: NextFunction) => {
+		try {
+			const data = schema.parse(req.body);
+			req.body = data;
+			next();
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				throw new AppError(
+					error.errors.map((err) => err.message).join("\n"),
+					400,
+				);
+			}
+			throw error;
 		}
-		throw error;
-	}
-};
+	};
 
-export const validateLogin = (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) => {
-	try {
-		const loginData = SimplifyUserSchema.parse(req.body);
-		req.body = loginData;
-		next();
-	} catch (error) {
-		if (error instanceof z.ZodError) {
-			res.status(400).json({ errors: error.errors.map((err) => err.message) });
-		} else {
-			next(error);
-		}
-	}
-};
+export const validateNewUser = validateSchema(NewUserSchema);
+export const validateLogin = validateSchema(SimplifyUserSchema);
 
 export type IUser = z.infer<typeof UserSchema>;
-export type ILogin = z.infer<typeof SimplifyUserSchema>;
+export type INewUser = z.infer<typeof NewUserSchema>;
+export type ISimplifyUser = z.infer<typeof SimplifyUserSchema>;

@@ -1,5 +1,5 @@
 import { prisma } from "../../prisma/client";
-import type { IUser } from "../schemas/user.schema";
+import type { INewUser } from "../schemas/user.schema";
 
 export class UserRepository {
 	static async find(email: string) {
@@ -8,7 +8,7 @@ export class UserRepository {
 		});
 	}
 
-	static async create(payload: IUser) {
+	static async create(payload: INewUser) {
 		return prisma.usuarios.create({
 			data: {
 				NOME: payload.nome,
