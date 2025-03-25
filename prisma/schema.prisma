@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,10 +7,93 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model usuario {
-  id    Int    @id @default(autoincrement())
-  nome  String
-  cpf   String @unique
-  email String @unique
-  senha String
+model USUARIO {
+  ID       Int        @id @default(autoincrement())
+  NOME     String     @db.VarChar(255)
+  CPF      String     @unique(map: "CPF") @db.VarChar(14)
+  EMAIL    String     @unique(map: "EMAIL") @db.VarChar(255)
+  SENHA    String     @db.VarChar(255)
+  veiculos veiculos[]
+}
+
+model abastecimento {
+  ID                     Int       @id @default(autoincrement())
+  VEICULO                Int?
+  DATA_ABASTECIMENTO     DateTime? @default(now()) @db.DateTime(0)
+  VALOR_GASTO            Decimal   @db.Decimal(10, 2)
+  QUANTIDADE_COMBUSTIVEL Decimal   @db.Decimal(10, 2)
+  TIPO_COMBUSTIVEL       String    @db.VarChar(50)
+  KM_ABASTECIMENTO       Int
+  veiculos               veiculos? @relation(fields: [VEICULO], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "abastecimento_ibfk_1")
+
+  @@index([VEICULO], map: "VEICULO")
+}
+
+model custos {
+  ID          Int         @id @default(autoincrement())
+  VEICULO     Int?
+  TIPO_CUSTO  Int?
+  VALOR_CUSTO Decimal     @db.Decimal(10, 2)
+  DATA_CUSTO  DateTime?   @default(now()) @db.DateTime(0)
+  veiculos    veiculos?   @relation(fields: [VEICULO], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "custos_ibfk_1")
+  tipo_custo  tipo_custo? @relation(fields: [TIPO_CUSTO], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "custos_ibfk_2")
+
+  @@index([TIPO_CUSTO], map: "TIPO_CUSTO")
+  @@index([VEICULO], map: "VEICULO")
+}
+
+model manutencao {
+  ID                      Int              @id @default(autoincrement())
+  VEICULO                 Int?
+  TIPO_MANUTENCAO         Int?
+  DATA_AGENDADA           DateTime         @db.DateTime(0)
+  DATA_REALIZADA_ULTIMA   DateTime?        @db.DateTime(0)
+  KM_MANUTENCAO           Int
+  CUSTO_MANUTENCAO        Decimal          @db.Decimal(10, 2)
+  DATA_PROXIMA_MANUTENCAO DateTime         @db.DateTime(0)
+  veiculos                veiculos?        @relation(fields: [VEICULO], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "manutencao_ibfk_1")
+  tipo_manutencao         tipo_manutencao? @relation(fields: [TIPO_MANUTENCAO], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "manutencao_ibfk_2")
+
+  @@index([TIPO_MANUTENCAO], map: "TIPO_MANUTENCAO")
+  @@index([VEICULO], map: "VEICULO")
+}
+
+model marca {
+  ID         Int        @id @default(autoincrement())
+  TIPO_MARCA String     @db.VarChar(255)
+  veiculos   veiculos[]
+}
+
+model tipo_custo {
+  ID         Int      @id @default(autoincrement())
+  TIPO_CUSTO String   @db.VarChar(255)
+  custos     custos[]
+}
+
+model tipo_manutencao {
+  ID              Int          @id @default(autoincrement())
+  TIPO_MANUTENCAO String       @db.VarChar(255)
+  manutencao      manutencao[]
+}
+
+model veiculos {
+  ID             Int             @id @default(autoincrement())
+  TIPO_MARCA     Int?
+  MODELO         String          @db.VarChar(255)
+  COR            String          @db.VarChar(50)
+  ANO_MODELO     Int
+  ANO_FABRICACAO Int
+  PLACA_VEICULO  String          @db.VarChar(10)
+  KM_INICIAL     Int
+  DATA_CADASTRO  DateTime?       @default(now()) @db.DateTime(0)
+  COMBUSTIVEL    String          @db.VarChar(50)
+  USUARIO_ID     Int?
+  abastecimento  abastecimento[]
+  custos         custos[]
+  manutencao     manutencao[]
+  USUARIO        USUARIO?        @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
+  marca          marca?          @relation(fields: [TIPO_MARCA], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "veiculos_ibfk_1")
+
+  @@index([TIPO_MARCA], map: "TIPO_MARCA")
+  @@index([USUARIO_ID], map: "fk_usuario")
 }
