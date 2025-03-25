@@ -4,6 +4,7 @@ import express from "express";
 import { authMiddleware } from "./middlewares/authMiddleware";
 import { errorHandler } from "./middlewares/errorHandlers";
 import authRoutes from "./routes/auth.routes";
+import vehiclesRoutes from "./routes/vehicles.routes";
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ app.use(express.json());
 app.use("/auth", authRoutes);
 
 app.use(authMiddleware);
+
+app.use("/:userId/vehicles", vehiclesRoutes);
+
 app.use(errorHandler);
 
 const PORT = process.env.PORT ?? 3000;

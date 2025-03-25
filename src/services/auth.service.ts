@@ -7,13 +7,11 @@ import { AppError } from "../utils/AppError";
 export class AuthService {
 	static async login({ email, senha }: ISimplifyUser) {
 		const user = await UserRepository.find(email);
-
 		const isPasswordCorrect = user && (await bcrypt.compare(senha, user.SENHA));
 
 		if (!user || !isPasswordCorrect) {
 			throw new AppError("E-mail ou senha incorretos", 401);
 		}
-
 		const token = generateToken(user.ID);
 		return token;
 	}
