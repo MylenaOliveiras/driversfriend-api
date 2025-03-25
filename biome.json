@@ -27,6 +27,9 @@
       "suspicious": {
         "noConsole": "warn"
       },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "style": {
         "useConst": {
           "level": "warn",

@@ -1,26 +1,23 @@
+import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 
-export const UserSchema = z
-	.object({
-		id: z.number(),
-		nome: z.string(),
-		cpf: z.string(),
-		email: z.string().email("E-mail inválido"),
-		senha: z
-			.string()
-			.min(6, "Senha deve ter no mínimo 6 caracteres")
-			.regex(
-				/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-				"Senha deve conter letras maiúsculas, minúsculas e números",
-			),
-		confirmacaoSenha: z.string(),
-	})
-	.refine((data) => data.senha === data.confirmacaoSenha, {
-		message: "Senhas não conferem",
-		path: ["confirmPassword"],
-	});
+export const UserSchema = z.object({
+	id: z.number(),
+	nome: z.string(),
+	cpf: z.string(),
+	email: z.string().email("E-mail inválido"),
+	senha: z
+		.string()
+		.min(6, "Senha deve ter no mínimo 6 caracteres")
+		.regex(
+			/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+			"Senha deve conter letras maiúsculas, minúsculas e números",
+		),
+});
 
-export const validateUser = (data: unknown) => {
+export const SimplifyUserSchema = UserSchema.pick({ email: true, senha: true });
+
+export const validateNewUser = (data: unknown) => {
 	try {
 		const user = UserSchema.parse(data);
 		return user;
@@ -32,4 +29,23 @@ export const validateUser = (data: unknown) => {
 	}
 };
 
-export type User = z.infer<typeof UserSchema>;
+export const validateLogin = (
+	req: Request,
+	res: Response,
+	next: NextFunction,
+) => {
+	try {
+		const loginData = SimplifyUserSchema.parse(req.body);
+		req.body = loginData;
+		next();
+	} catch (error) {
+		if (error instanceof z.ZodError) {
+			res.status(400).json({ errors: error.errors.map((err) => err.message) });
+		} else {
+			next(error);
+		}
+	}
+};
+
+export type IUser = z.infer<typeof UserSchema>;
+export type ILogin = z.infer<typeof SimplifyUserSchema>;
