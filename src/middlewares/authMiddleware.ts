@@ -1,20 +1,20 @@
 import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { AppError } from "../utils/AppError";
 
 export const authMiddleware = (
 	req: Request,
-	res: Response,
+	_res: Response,
 	next: NextFunction,
 ) => {
 	const authHeader = req.headers.authorization;
 
 	if (!process.env.JWT_SECRET) {
-		throw new Error("JWT_SECRET is not defined");
+		throw new AppError("JWT_SECRET is not defined", 500);
 	}
 
 	if (!authHeader) {
-		res.status(401).json({ message: "Token não fornecido" });
-		return;
+		throw new AppError("Token não fornecido", 401);
 	}
 
 	const token = authHeader.split(" ")[1]; // Formato: "Bearer TOKEN"
@@ -27,7 +27,6 @@ export const authMiddleware = (
 	} catch (err: unknown) {
 		// biome-ignore lint/suspicious/noConsole: <explanation>
 		console.error("Authentication error:", err);
-		res.status(401).json({ message: "Token inválido ou expirado" });
-		return;
+		throw new AppError("Token inválido ou expirado", 401);
 	}
 };
