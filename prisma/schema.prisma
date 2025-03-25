@@ -7,15 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model USUARIO {
-  ID       Int        @id @default(autoincrement())
-  NOME     String     @db.VarChar(255)
-  CPF      String     @unique(map: "CPF") @db.VarChar(14)
-  EMAIL    String     @unique(map: "EMAIL") @db.VarChar(255)
-  SENHA    String     @db.VarChar(255)
-  veiculos veiculos[]
-}
-
 model abastecimento {
   ID                     Int       @id @default(autoincrement())
   VEICULO                Int?
@@ -91,9 +82,18 @@ model veiculos {
   abastecimento  abastecimento[]
   custos         custos[]
   manutencao     manutencao[]
-  USUARIO        USUARIO?        @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
+  USUARIO        usuarios?       @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
   marca          marca?          @relation(fields: [TIPO_MARCA], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "veiculos_ibfk_1")
 
   @@index([TIPO_MARCA], map: "TIPO_MARCA")
   @@index([USUARIO_ID], map: "fk_usuario")
+}
+
+model usuarios {
+  ID       Int        @id @default(autoincrement())
+  NOME     String     @db.VarChar(255)
+  CPF      String     @unique(map: "CPF") @db.VarChar(14)
+  EMAIL    String     @unique(map: "EMAIL") @db.VarChar(255)
+  SENHA    String     @db.VarChar(255)
+  veiculos veiculos[]
 }

@@ -15,7 +15,9 @@ export const UserSchema = z.object({
 		),
 });
 
-export const SimplifyUserSchema = UserSchema.pick({ email: true, senha: true });
+export const SimplifyUserSchema = UserSchema.pick({ email: true }).extend({
+	senha: z.string(),
+});
 
 export const validateNewUser = (data: unknown) => {
 	try {

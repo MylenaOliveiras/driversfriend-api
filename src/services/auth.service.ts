@@ -11,7 +11,7 @@ export class AuthService {
 
 		const isPasswordValid = await bcrypt.compare(senha, user.SENHA);
 		if (!isPasswordValid) {
-			throw new Error("Usuário não encontrado");
+			throw new Error("Senha inválida");
 		}
 
 		const token = generateToken(user.ID);
