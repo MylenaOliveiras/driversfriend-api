@@ -6,12 +6,12 @@ export class AuthService {
 	static async login(email: string, senha: string) {
 		const user = await UserRepository.find(email);
 		if (!user) {
-			throw new Error("Usuário não encontrado");
+			throw new Error("Invalid credentials");
 		}
-
 		const isPasswordValid = await bcrypt.compare(senha, user.SENHA);
-		if (!isPasswordValid) {
-			throw new Error("Senha inválida");
+
+		if (!user || !isPasswordValid) {
+			throw new Error("Invalid credentials");
 		}
 
 		const token = generateToken(user.ID);
