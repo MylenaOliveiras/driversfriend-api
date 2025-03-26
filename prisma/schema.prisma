@@ -50,26 +50,30 @@ model manutencao {
 }
 
 model marca {
-  ID         Int        @id @default(autoincrement())
-  TIPO_MARCA String     @db.VarChar(255)
-  veiculos   veiculos[]
+  ID           Int          @id @default(autoincrement())
+  NOME         String?      @db.VarChar(255)
+  TIPO_ID      Int
+  tipo_veiculo tipo_veiculo @relation(fields: [TIPO_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_tipo_veiculo")
+  veiculos     veiculos[]
+
+  @@index([TIPO_ID], map: "fk_tipo_veiculo")
 }
 
 model tipo_custo {
-  ID         Int      @id @default(autoincrement())
-  TIPO_CUSTO String   @db.VarChar(255)
-  custos     custos[]
+  ID     Int      @id @default(autoincrement())
+  TIPO   String?  @db.VarChar(255)
+  custos custos[]
 }
 
 model tipo_manutencao {
-  ID              Int          @id @default(autoincrement())
-  TIPO_MANUTENCAO String       @db.VarChar(255)
-  manutencao      manutencao[]
+  ID         Int          @id @default(autoincrement())
+  TIPO       String?      @db.VarChar(255)
+  manutencao manutencao[]
 }
 
 model veiculos {
   ID             Int             @id @default(autoincrement())
-  TIPO_MARCA     Int?
+  MARCA_ID       Int?
   MODELO         String          @db.VarChar(255)
   COR            String          @db.VarChar(50)
   ANO_MODELO     Int
@@ -83,10 +87,10 @@ model veiculos {
   custos         custos[]
   manutencao     manutencao[]
   USUARIO        usuarios?       @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
-  marca          marca?          @relation(fields: [TIPO_MARCA], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "veiculos_ibfk_1")
+  marca          marca?          @relation(fields: [MARCA_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_veiculos_marca")
 
-  @@index([TIPO_MARCA], map: "TIPO_MARCA")
   @@index([USUARIO_ID], map: "fk_usuario")
+  @@index([MARCA_ID], map: "MARCA_ID")
 }
 
 model usuarios {
@@ -96,4 +100,10 @@ model usuarios {
   EMAIL    String     @unique(map: "EMAIL") @db.VarChar(255)
   SENHA    String     @db.VarChar(255)
   veiculos veiculos[]
+}
+
+model tipo_veiculo {
+  ID    Int     @id @default(autoincrement())
+  NOME  String  @db.VarChar(50)
+  marca marca[]
 }

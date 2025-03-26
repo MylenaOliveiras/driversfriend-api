@@ -17,7 +17,7 @@ app.use("/auth", authRoutes);
 
 app.use(authMiddleware);
 
-app.use("/:userId/vehicles", vehiclesRoutes);
+app.use("/vehicles", vehiclesRoutes);
 
 app.use(errorHandler);
 

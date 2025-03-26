@@ -1,7 +1,9 @@
-import bcrypt from "bcrypt";
-import { generateToken } from "../../utils/generateToken";
-import { UserRepository } from "../repositories/user.repository";
-import type { INewUser, ISimplifyUser } from "../schemas/user.schema";
-import { AppError } from "../utils/AppError";
+import { VehiclesRepository } from "../repositories/vehicles.repository";
 
-export class VehiclesService {}
+export class VehiclesService {
+	static async list(user_id: string) {
+		const userId = Number.parseInt(user_id);
+		const vehicles = await VehiclesRepository.find(userId);
+		return vehicles;
+	}
+}
