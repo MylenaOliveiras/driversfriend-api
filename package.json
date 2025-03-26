@@ -9,7 +9,7 @@
     "check": "biome check ./src",
     "lint": "biome lint --write ./src",
     "prepare": "husky",
-    "vercel-build": "pnpm install && pnpm prisma generate && pnpm run build"
+    "vercel-build": "pnpm install && pnpx prisma generate && pnpm run build"
   },
   "lint-staged": {
     "*.ts": [
