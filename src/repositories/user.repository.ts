@@ -1,4 +1,4 @@
-import { prisma } from "../../prisma/client";
+import { prisma } from "../../prisma/prismaClient";
 import type { INewUser } from "../schemas/user.schema";
 
 export class UserRepository {

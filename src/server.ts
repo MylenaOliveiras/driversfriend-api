@@ -13,11 +13,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (_req, res) => {
+	res.json({
+		message: "Welcome to the DriversFriend API!",
+		status: "Running",
+		version: "1.0.0",
+	});
+});
 app.use("/auth", authRoutes);
-
-app.use(authMiddleware);
-
-app.use("/vehicles", vehiclesRoutes);
+app.use("/vehicles", authMiddleware, vehiclesRoutes);
 
 app.use(errorHandler);
 

@@ -1,9 +1,5 @@
 {
   "version": 2,
-  "env": {
-    "DATABASE_URL": "@DATABASE_URL",
-    "JWT_SECRET": "@JWT_SECRET"
-  },
   "builds": [
     {
       "src": "src/server.ts",
@@ -11,18 +7,9 @@
       "config": {
         "maxLambdaSize": "50mb",
         "installCommand": "pnpm i",
-        "buildCommand": "pnpm dlx prisma generate && pnpm prisma migrate deploy && pnpm run vercel-build"
+        "buildCommand": "pnpm prisma generate && pnpm prisma migrate deploy && pnpm run build"
       }
     }
   ],
- "routes": [
-    {
-        "src": "/api/(.*)",
-        "dest": "/src/server.ts"
-    },
-    {
-        "src": "/",
-        "dest": "/src/server.ts"
-    }
-]
+  "routes": [{ "src": "/(.*)", "dest": "/src/server.ts" }]
 }

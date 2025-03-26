@@ -1,4 +1,4 @@
-import { prisma } from "../../prisma/client";
+import { prisma } from "../../prisma/prismaClient";
 
 export class VehiclesRepository {
 	static async find(user_id: number) {
