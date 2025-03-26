@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsnd --exit-child --respawn --transpile-only --ignore-watch node_modules src/server.ts",
-    "build": "tsc",
-    "check": "biome check ./src",
-    "lint": "biome lint --write ./src",
-    "prepare": "husky",
-    "vercel-build": "pnpm install && pnpx prisma generate && pnpm run build"
-  },
+  "dev": "tsnd --exit-child --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+  "build": "tsc",
+  "check": "biome check ./src",
+  "lint": "biome lint --write ./src",
+  "prepare": "husky",
+  "vercel-build": "pnpm install && pnpm prisma generate && pnpm run build && pnpm run migrate",
+  "migrate": "pnpm prisma migrate deploy",
+  "postinstall": "pnpm prisma generate"
+},
   "lint-staged": {
     "*.ts": [
       "pnpm biome check --fix"
