@@ -8,7 +8,8 @@
     "build": "tsc",
     "check": "biome check ./src",
     "lint": "biome lint --write ./src",
-    "prepare": "husky"
+    "prepare": "husky",
+    "vercel-build": "pnpm install && pnpm prisma generate && pnpm run build"
   },
   "lint-staged": {
     "*.ts": [
@@ -31,7 +32,7 @@
     "@biomejs/biome": "1.9.4",
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
+    "@types/express": "^5.0.1",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.10",

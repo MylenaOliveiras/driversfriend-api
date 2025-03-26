@@ -1,11 +1,17 @@
 {
   "version": 2,
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret"
+  },
   "builds": [
     {
       "src": "src/server.ts",
       "use": "@vercel/node",
       "config": {
-        "maxLambdaSize": "50mb"
+        "maxLambdaSize": "50mb",
+        "installCommand": "pnpm install",
+        "buildCommand": "pnpm prisma generate && pnpm prisma migrate deploy && pnpm run build"
       }
     }
   ],
