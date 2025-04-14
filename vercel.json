@@ -6,7 +6,7 @@
       "use": "@vercel/node",
       "config": {
         "maxLambdaSize": "50mb",
-        "installCommand": "pnpm i",
+        "installCommand": "pnpm install",
         "buildCommand": "pnpm prisma generate && pnpm prisma migrate deploy && pnpm run build"
       }
     }

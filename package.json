@@ -7,6 +7,7 @@
     "dev": "tsnd --exit-child --respawn --transpile-only --ignore-watch node_modules src/server.ts",
     "build": "pnpm prisma generate && tsc",
     "check": "biome check ./src",
+    "postinstall": "prisma generate",
     "lint": "biome lint --write ./src",
     "prepare": "husky"
   },
