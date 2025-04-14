@@ -4,6 +4,12 @@ import { validateVehicles } from "../schemas/vehicles.schema";
 
 const vehiclesRoutes = Router();
 
-vehiclesRoutes.get("/:userId", VehiclesController.list);
+vehiclesRoutes.get("/", VehiclesController.list);
+vehiclesRoutes.post("/", validateVehicles, VehiclesController.create);
+
+vehiclesRoutes.delete("/:vehicleId", VehiclesController.delete);
+vehiclesRoutes.put("/:vehicleId", validateVehicles, VehiclesController.update);
+
+vehiclesRoutes.get("/:vehicleId", VehiclesController.findById);
 
 export default vehiclesRoutes;

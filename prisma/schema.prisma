@@ -50,13 +50,10 @@ model manutencao {
 }
 
 model marca {
-  ID           Int          @id @default(autoincrement())
-  NOME         String?      @db.VarChar(255)
-  TIPO_ID      Int
-  tipo_veiculo tipo_veiculo @relation(fields: [TIPO_ID], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "fk_tipo_veiculo")
+  ID           Int           @id @default(autoincrement())
+  NOME         String?       @db.VarChar(255)
+  TIPO_VEICULO TIPO_VEICULO?
   veiculos     veiculos[]
-
-  @@index([TIPO_ID], map: "fk_tipo_veiculo")
 }
 
 model tipo_custo {
@@ -72,22 +69,23 @@ model tipo_manutencao {
 }
 
 model veiculos {
-  ID             Int             @id @default(autoincrement())
-  MARCA_ID       Int?
-  MODELO         String          @db.VarChar(255)
-  COR            String          @db.VarChar(50)
-  ANO_MODELO     Int
-  ANO_FABRICACAO Int
-  PLACA_VEICULO  String          @db.VarChar(10)
-  KM_INICIAL     Int
-  DATA_CADASTRO  DateTime?       @default(now()) @db.DateTime(0)
-  COMBUSTIVEL    String          @db.VarChar(50)
-  USUARIO_ID     Int?
-  abastecimento  abastecimento[]
-  custos         custos[]
-  manutencao     manutencao[]
-  USUARIO        usuarios?       @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
-  marca          marca?          @relation(fields: [MARCA_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_veiculos_marca")
+  ID               Int               @id @default(autoincrement())
+  MARCA_ID         Int?
+  MODELO           String            @db.VarChar(255)
+  COR              String            @db.VarChar(50)
+  ANO_MODELO       Int
+  ANO_FABRICACAO   Int
+  PLACA_VEICULO    String            @unique(map: "placa_unica") @db.VarChar(10)
+  KM_INICIAL       Int
+  DATA_CADASTRO    DateTime?         @default(now()) @db.DateTime(0)
+  TIPO_COMBUSTIVEL TIPO_COMBUSTIVEL?
+  USUARIO_ID       Int?
+  TIPO_VEICULO     TIPO_VEICULO?
+  abastecimento    abastecimento[]
+  custos           custos[]
+  manutencao       manutencao[]
+  USUARIO          usuarios?         @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
+  marca            marca?            @relation(fields: [MARCA_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_veiculos_marca")
 
   @@index([USUARIO_ID], map: "fk_usuario")
   @@index([MARCA_ID], map: "MARCA_ID")
@@ -102,8 +100,19 @@ model usuarios {
   veiculos veiculos[]
 }
 
-model tipo_veiculo {
-  ID    Int     @id @default(autoincrement())
-  NOME  String  @db.VarChar(50)
-  marca marca[]
+enum TIPO_COMBUSTIVEL {
+  GASOLINA
+  DIESEL
+  GNV
+  ELETRICO
+  FLEX
+  HIBRIDO
+}
+
+enum TIPO_VEICULO {
+  CARRO
+  MOTO
+  CAMINHAO
+  ONIBUS
+  VAN
 }

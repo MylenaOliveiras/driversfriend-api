@@ -1,8 +1,24 @@
 import type { NextFunction, Request, Response } from "express";
-import { z } from "zod";
-import { AppError } from "../utils/AppError";
+import { ZodError, z } from "zod";
 
-const vehiclesSchema = z.object({
+enum FUEL {
+	GASOLINA = "GASOLINA",
+	DIESEL = "DIESEL",
+	GNV = "GNV",
+	ELETRICO = "ELETRICO",
+	FLEX = "FLEX",
+	HIBRIDO = "HIBRIDO",
+}
+
+enum TIPO_VEICULO {
+	CARRO = "CARRO",
+	MOTO = "MOTO",
+	CAMINHAO = "CAMINHAO",
+	ONIBUS = "ONIBUS",
+	VAN = "VAN",
+}
+
+const vehicleSchema = z.object({
 	id: z.number().int(),
 	marca: z.number().int(),
 	modelo: z.string(),
@@ -10,28 +26,47 @@ const vehiclesSchema = z.object({
 	anoModelo: z.number().int(),
 	anoFabricacao: z.number().int(),
 	placaVeiculo: z.string(),
-	kmInicial: z.number().int(),
-	dataCadastro: z.string(),
-	combustivel: z.string(),
+	kmInicial: z.number().int().min(0),
+	dataCadastro: z.string().datetime(),
+	tipo_combustivel: z.nativeEnum(FUEL),
+	tipo_veiculo: z.nativeEnum(TIPO_VEICULO),
 	usuarioId: z.number().int(),
 });
 
+const vehicleSchemaSimple = vehicleSchema.pick({
+	id: true,
+	marca: true,
+	modelo: true,
+});
+
+const newVehicleSchema = vehicleSchema.omit({ id: true, usuarioId: true });
+
 export const validateVehicles = (
 	req: Request,
-	_res: Response,
+	res: Response,
 	next: NextFunction,
 ) => {
 	try {
-		const data = vehiclesSchema.parse(req.body);
+		const data = newVehicleSchema.parse(req.body);
 		req.body = data;
 		next();
 	} catch (error) {
-		if (error instanceof z.ZodError) {
-			throw new AppError(
-				error.errors.map((err) => err.message).join("\n"),
-				400,
-			);
+		if (error instanceof ZodError) {
+			const formattedErrors = error.errors.map((err) => ({
+				field: err.path.join("."),
+				message: err.message,
+			}));
+
+			res.status(400).json({
+				message: "Validation failed",
+				errors: formattedErrors,
+			});
 		}
-		throw error;
+
+		next(error);
 	}
 };
+
+export type INewVehicle = z.infer<typeof newVehicleSchema>;
+export type IVehicle = z.infer<typeof vehicleSchema>;
+export type IVehicleSimple = z.infer<typeof vehicleSchemaSimple>;

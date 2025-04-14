@@ -24,6 +24,11 @@ app.use("/auth", authRoutes);
 app.use("/vehicles", authMiddleware, vehiclesRoutes);
 
 app.use(errorHandler);
+app.use((req, res) => {
+	res.status(404).json({
+		message: "Route not found",
+	});
+});
 
 const PORT = process.env.PORT ?? 3000;
 
