@@ -4,6 +4,7 @@ import express from "express";
 import { authMiddleware } from "./middlewares/authMiddleware";
 import { errorHandler } from "./middlewares/errorHandlers";
 import authRoutes from "./routes/auth.routes";
+import fuelingRoutes from "./routes/fueling.routes";
 import vehiclesRoutes from "./routes/vehicles.routes";
 
 dotenv.config();
@@ -20,8 +21,10 @@ app.get("/", (_req, res) => {
 		version: "1.0.0",
 	});
 });
+
 app.use("/auth", authRoutes);
 app.use("/vehicles", authMiddleware, vehiclesRoutes);
+app.use("/fueling", authMiddleware, fuelingRoutes);
 
 app.use(errorHandler);
 app.use((req, res) => {

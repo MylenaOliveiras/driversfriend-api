@@ -1,6 +1,6 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma/prismaClient";
 import type { INewVehicle } from "../schemas/vehicles.schema";
+import { errorPrismaHandler } from "./utils";
 
 export class VehiclesRepository {
 	static async findVehiclesByUserId(user_id: number) {
@@ -12,12 +12,7 @@ export class VehiclesRepository {
 			});
 			return vehicles;
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				console.error("Prisma error:", error.message);
-				throw new Error(`Erro ao buscar veículos: ${error.message}`);
-			}
-			console.error("Unexpected error:", error);
-			throw new Error("Erro inesperado ao buscar veículos");
+			errorPrismaHandler(error);
 		}
 	}
 
@@ -31,29 +26,21 @@ export class VehiclesRepository {
 
 			return vehicle;
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				console.error("Prisma error:", error.message);
-				throw new Error(`Erro ao buscar veículo: ${error.message}`);
-			}
-			console.error("Unexpected error:", error);
-			throw new Error("Erro inesperado ao buscar veículo");
+			errorPrismaHandler(error);
 		}
 	}
 
 	static async findByLicensePlate(licensePlate: string) {
 		try {
-			return prisma.veiculos.findUnique({
+			const vehicle = await prisma.veiculos.findUnique({
 				where: {
 					PLACA_VEICULO: licensePlate,
 				},
 			});
+
+			return vehicle;
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				console.error("Prisma error:", error.message);
-				throw new Error(`Erro ao buscar veículo: ${error.message}`);
-			}
-			console.error("Unexpected error:", error);
-			throw new Error("Erro inesperado ao buscar veículo");
+			errorPrismaHandler(error);
 		}
 	}
 
@@ -76,12 +63,7 @@ export class VehiclesRepository {
 			});
 			return newVehicle;
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				console.error("Prisma error:", error.message);
-				throw new Error(`Erro ao criar veículo: ${error.message}`);
-			}
-			console.error("Unexpected error:", error);
-			throw new Error("Erro inesperado ao criar veículo");
+			errorPrismaHandler(error);
 		}
 	}
 
@@ -93,12 +75,7 @@ export class VehiclesRepository {
 				},
 			});
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				console.error("Prisma error:", error.message);
-				throw new Error(`Erro ao criar veículo: ${error.message}`);
-			}
-			console.error("Unexpected error:", error);
-			throw new Error("Erro inesperado ao criar veículo");
+			errorPrismaHandler(error);
 		}
 	}
 
@@ -122,12 +99,7 @@ export class VehiclesRepository {
 				},
 			});
 		} catch (error) {
-			if (error instanceof Prisma.PrismaClientKnownRequestError) {
-				console.error("Prisma error:", error.message);
-				throw new Error(`Erro ao atualizar veículo: ${error.message}`);
-			}
-			console.error("Unexpected error:", error);
-			throw new Error("Erro inesperado ao atualizar veículo");
+			errorPrismaHandler(error);
 		}
 	}
 }

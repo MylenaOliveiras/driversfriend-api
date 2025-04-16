@@ -4,7 +4,10 @@ import type { INewVehicle, IVehicleSimple } from "../schemas/vehicles.schema";
 import { AppError } from "../utils/AppError";
 
 export class VehiclesService {
-	static validateOwnership(vehicle: veiculos | null, userId: number) {
+	static validateOwnership(
+		vehicle: veiculos | null | undefined,
+		userId: number,
+	) {
 		if (!vehicle) {
 			throw new AppError("Veículo não encontrado", 404);
 		}
@@ -21,7 +24,11 @@ export class VehiclesService {
 
 		const vehicles = await VehiclesRepository.findVehiclesByUserId(userId);
 
-		const formattedVehiclesList = vehicles.map((vehicle) => ({
+		if (!vehicles || vehicles.length === 0) {
+			throw new AppError("Nenhum veículo encontrado", 204);
+		}
+
+		const formattedVehiclesList = vehicles?.map((vehicle) => ({
 			id: vehicle.ID,
 			marca: vehicle.MARCA_ID || 0,
 			modelo: vehicle.MODELO,

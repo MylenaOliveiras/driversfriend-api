@@ -7,19 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model abastecimento {
-  ID                     Int       @id @default(autoincrement())
-  VEICULO                Int?
-  DATA_ABASTECIMENTO     DateTime? @default(now()) @db.DateTime(0)
-  VALOR_GASTO            Decimal   @db.Decimal(10, 2)
-  QUANTIDADE_COMBUSTIVEL Decimal   @db.Decimal(10, 2)
-  TIPO_COMBUSTIVEL       String    @db.VarChar(50)
-  KM_ABASTECIMENTO       Int
-  veiculos               veiculos? @relation(fields: [VEICULO], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "abastecimento_ibfk_1")
-
-  @@index([VEICULO], map: "VEICULO")
-}
-
 model custos {
   ID          Int         @id @default(autoincrement())
   VEICULO     Int?
@@ -81,7 +68,7 @@ model veiculos {
   TIPO_COMBUSTIVEL TIPO_COMBUSTIVEL?
   USUARIO_ID       Int?
   TIPO_VEICULO     TIPO_VEICULO?
-  abastecimento    abastecimento[]
+  abastecimentos   abastecimentos[]
   custos           custos[]
   manutencao       manutencao[]
   USUARIO          usuarios?         @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
@@ -100,6 +87,20 @@ model usuarios {
   veiculos veiculos[]
 }
 
+model abastecimentos {
+  ID                 Int                              @id @default(autoincrement())
+  VEICULO_ID         Int
+  DATA_ABASTECIMENTO DateTime?                        @default(now()) @db.DateTime(0)
+  VALOR_TOTAL        Decimal                          @db.Decimal(10, 2)
+  LITROS_ABASTECIDOS Decimal                          @db.Decimal(10, 2)
+  TIPO_COMBUSTIVEL   abastecimentos_TIPO_COMBUSTIVEL?
+  KM_ATUAL           Int
+  PRECO_LITRO        Decimal                          @db.Decimal(10, 2)
+  veiculos           veiculos                         @relation(fields: [VEICULO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "abastecimentos_ibfk_1")
+
+  @@index([VEICULO_ID], map: "VEICULO")
+}
+
 enum TIPO_COMBUSTIVEL {
   GASOLINA
   DIESEL
@@ -115,4 +116,13 @@ enum TIPO_VEICULO {
   CAMINHAO
   ONIBUS
   VAN
+}
+
+enum abastecimentos_TIPO_COMBUSTIVEL {
+  GASOLINA
+  DIESEL
+  GNV
+  ELETRICO
+  FLEX
+  HIBRIDO
 }

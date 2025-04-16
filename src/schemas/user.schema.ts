@@ -1,6 +1,5 @@
-import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
-import { AppError } from "../utils/AppError";
+import { validateSchema } from "./utils";
 
 export const UserSchema = z.object({
 	id: z.number(),
@@ -20,24 +19,6 @@ export const NewUserSchema = UserSchema.omit({ id: true });
 export const SimplifyUserSchema = UserSchema.pick({ email: true }).extend({
 	senha: z.string(),
 });
-
-const validateSchema =
-	(schema: z.ZodSchema) =>
-	(req: Request, res: Response, next: NextFunction) => {
-		try {
-			const data = schema.parse(req.body);
-			req.body = data;
-			next();
-		} catch (error) {
-			if (error instanceof z.ZodError) {
-				throw new AppError(
-					error.errors.map((err) => err.message).join("\n"),
-					400,
-				);
-			}
-			throw error;
-		}
-	};
 
 export const validateNewUser = validateSchema(NewUserSchema);
 export const validateLogin = validateSchema(SimplifyUserSchema);

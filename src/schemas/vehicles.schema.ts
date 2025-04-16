@@ -1,7 +1,7 @@
-import type { NextFunction, Request, Response } from "express";
-import { ZodError, z } from "zod";
+import { z } from "zod";
+import { validateSchema } from "./utils";
 
-enum FUEL {
+export enum FUEL {
 	GASOLINA = "GASOLINA",
 	DIESEL = "DIESEL",
 	GNV = "GNV",
@@ -41,31 +41,7 @@ const vehicleSchemaSimple = vehicleSchema.pick({
 
 const newVehicleSchema = vehicleSchema.omit({ id: true, usuarioId: true });
 
-export const validateVehicles = (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-) => {
-	try {
-		const data = newVehicleSchema.parse(req.body);
-		req.body = data;
-		next();
-	} catch (error) {
-		if (error instanceof ZodError) {
-			const formattedErrors = error.errors.map((err) => ({
-				field: err.path.join("."),
-				message: err.message,
-			}));
-
-			res.status(400).json({
-				message: "Validation failed",
-				errors: formattedErrors,
-			});
-		}
-
-		next(error);
-	}
-};
+export const validateVehicle = validateSchema(newVehicleSchema);
 
 export type INewVehicle = z.infer<typeof newVehicleSchema>;
 export type IVehicle = z.infer<typeof vehicleSchema>;
