@@ -18,4 +18,20 @@ export class FuelingController {
 			next(error);
 		}
 	}
+
+	static async listByVehicle(req: Request, res: Response, next: NextFunction) {
+		try {
+			const vehicleId = req.params.vehicleId;
+			const userId = req.user?.id ?? 0;
+
+			const fuelingsList = await FuelingService.listByVehicle(
+				userId,
+				vehicleId,
+			);
+
+			res.status(200).json(fuelingsList);
+		} catch (error) {
+			next(error);
+		}
+	}
 }

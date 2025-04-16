@@ -28,8 +28,9 @@ export class VehiclesController {
 		try {
 			const loggedUser = req.user?.id || 0;
 			const vehicleId = req.params.vehicleId;
-			const vehicle = await VehiclesService.delete(loggedUser, vehicleId);
-			res.status(200).json(vehicle);
+			await VehiclesService.delete(loggedUser, vehicleId);
+
+			res.status(204);
 		} catch (err) {
 			next(err);
 		}

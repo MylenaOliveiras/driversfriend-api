@@ -46,4 +46,25 @@ export class FuelingService {
 
 		await FuelingRepository.create(vehicleIdParsed, fuelingData);
 	}
+
+	static async listByVehicle(userId: number, vehicleId: string) {
+		const vehicle = await VehiclesService.findById(userId, vehicleId);
+		const fuelings = await FuelingRepository.findByVehicle(vehicle.id || 0);
+
+		if (!fuelings || fuelings.length === 0) {
+			throw new AppError("Nenhum abastecimento encontrado.", 204);
+		}
+
+		const formattedFuelingsList = fuelings.map((fueling) => ({
+			id: fueling.ID,
+			kmAtual: fueling.KM_ATUAL,
+			dataAbastecimento: fueling.DATA_ABASTECIMENTO,
+			valorTotal: fueling.VALOR_TOTAL,
+			precoLitro: fueling.PRECO_LITRO,
+			litrosAbastecidos: fueling.LITROS_ABASTECIDOS,
+			tipoCombustivel: fueling.TIPO_COMBUSTIVEL,
+		}));
+
+		return formattedFuelingsList;
+	}
 }
