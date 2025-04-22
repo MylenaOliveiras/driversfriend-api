@@ -34,4 +34,18 @@ export class FuelingController {
 			next(error);
 		}
 	}
+
+	static async delete(req: Request, res: Response, next: NextFunction) {
+		try {
+			const userId = req.user?.id ?? 0;
+			const vehicleId = req.params.vehicleId;
+			const fuelingId = req.params.fuelingId;
+
+			await FuelingService.delete(userId, vehicleId, fuelingId);
+
+			res.status(204).json({ message: "Abastecimento excluído com sucesso!" });
+		} catch (error) {
+			next(error);
+		}
+	}
 }

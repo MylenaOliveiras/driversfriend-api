@@ -6,5 +6,6 @@ const fuelingRoutes = Router();
 
 fuelingRoutes.post("/:vehicleId", validateFueling, FuelingController.create);
 fuelingRoutes.get("/:vehicleId", FuelingController.listByVehicle);
+fuelingRoutes.delete("/:vehicleId/:fuelingId", FuelingController.delete);
 
 export default fuelingRoutes;

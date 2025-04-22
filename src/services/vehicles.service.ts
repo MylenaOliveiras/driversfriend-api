@@ -25,7 +25,7 @@ export class VehiclesService {
 		const vehicles = await VehiclesRepository.findVehiclesByUserId(userId);
 
 		if (!vehicles || vehicles.length === 0) {
-			throw new AppError("Nenhum veículo encontrado", 204);
+			throw new AppError("Nenhum veículo encontrado", 400);
 		}
 
 		const formattedVehiclesList = vehicles?.map((vehicle) => ({

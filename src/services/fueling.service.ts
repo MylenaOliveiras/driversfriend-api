@@ -12,16 +12,12 @@ export class FuelingService {
 		vehicleId: string,
 		data: IFuelingRequest,
 	) {
-		const findVehicle = await VehiclesService.findById(userId, vehicleId);
+		const vehicle = await VehiclesService.findById(userId, vehicleId);
 
 		const vehicleIdParsed = Number(vehicleId);
 
 		const findLastFueling =
 			await FuelingRepository.findLastFueling(vehicleIdParsed);
-
-		if (!findVehicle || vehicleIdParsed === 0) {
-			throw new AppError("Veículo não encontrado.", 404);
-		}
 
 		if (findLastFueling && data.kmAtual <= findLastFueling.KM_ATUAL) {
 			throw new AppError(
@@ -30,7 +26,7 @@ export class FuelingService {
 			);
 		}
 
-		if (data.kmAtual <= (findVehicle?.kmInicial ?? 0)) {
+		if (data.kmAtual <= (vehicle?.kmInicial ?? 0)) {
 			throw new AppError(
 				"A quilometragem atual não pode ser menor que a inicial.",
 				400,
@@ -52,12 +48,11 @@ export class FuelingService {
 		const fuelings = await FuelingRepository.findByVehicle(vehicle.id || 0);
 
 		if (!fuelings || fuelings.length === 0) {
-			throw new AppError("Nenhum abastecimento encontrado.", 204);
+			throw new AppError("Nenhum abastecimento encontrado.", 400);
 		}
 
 		const formattedFuelingsList = fuelings.map((fueling) => ({
 			id: fueling.ID,
-			kmAtual: fueling.KM_ATUAL,
 			dataAbastecimento: fueling.DATA_ABASTECIMENTO,
 			valorTotal: fueling.VALOR_TOTAL,
 			precoLitro: fueling.PRECO_LITRO,
@@ -66,5 +61,20 @@ export class FuelingService {
 		}));
 
 		return formattedFuelingsList;
+	}
+
+	static async delete(userId: number, vehicleId: string, fuelingId: string) {
+		await VehiclesService.findById(userId, vehicleId);
+		const fuelings = FuelingService.listByVehicle(userId, vehicleId);
+
+		const foundFueling = (await fuelings).find(
+			(f) => f.id === Number(fuelingId),
+		);
+
+		if (!foundFueling) {
+			throw new AppError("Abastecimento não encontrado.", 404);
+		}
+
+		await FuelingRepository.delete(foundFueling.id);
 	}
 }

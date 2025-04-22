@@ -47,4 +47,16 @@ export class FuelingRepository {
 			errorPrismaHandler(error);
 		}
 	}
+
+	static async delete(fuelingId: number) {
+		try {
+			await prisma.abastecimentos.delete({
+				where: {
+					ID: fuelingId,
+				},
+			});
+		} catch (error) {
+			errorPrismaHandler(error);
+		}
+	}
 }

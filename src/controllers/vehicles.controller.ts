@@ -30,7 +30,7 @@ export class VehiclesController {
 			const vehicleId = req.params.vehicleId;
 			await VehiclesService.delete(loggedUser, vehicleId);
 
-			res.status(204);
+			res.status(204).send();
 		} catch (err) {
 			next(err);
 		}
