@@ -57,8 +57,8 @@ export class VehiclesRepository {
 					PLACA_VEICULO: vehicleData.placaVeiculo,
 					KM_INICIAL: vehicleData.kmInicial,
 					DATA_CADASTRO: vehicleData.dataCadastro,
-					TIPO_COMBUSTIVEL: vehicleData.tipo_combustivel,
-					TIPO_VEICULO: vehicleData.tipo_veiculo,
+					TIPO_COMBUSTIVEL: vehicleData.combustivel,
+					TIPO_VEICULO: vehicleData.tipoVeiculo,
 				},
 			});
 			return newVehicle;
@@ -94,8 +94,8 @@ export class VehiclesRepository {
 					PLACA_VEICULO: vehicleData.placaVeiculo,
 					KM_INICIAL: vehicleData.kmInicial,
 					DATA_CADASTRO: vehicleData.dataCadastro,
-					TIPO_COMBUSTIVEL: vehicleData.tipo_combustivel,
-					TIPO_VEICULO: vehicleData.tipo_veiculo,
+					TIPO_COMBUSTIVEL: vehicleData.combustivel,
+					TIPO_VEICULO: vehicleData.tipoVeiculo,
 				},
 			});
 		} catch (error) {
