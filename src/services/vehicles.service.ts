@@ -24,17 +24,13 @@ export class VehiclesService {
 
 		const vehicles = await VehiclesRepository.findVehiclesByUserId(userId);
 
-		if (!vehicles || vehicles.length === 0) {
-			throw new AppError("Nenhum veículo encontrado", 400);
-		}
-
 		const formattedVehiclesList = vehicles?.map((vehicle) => ({
 			id: vehicle.ID,
 			marca: vehicle.MARCA_ID || 0,
 			modelo: vehicle.MODELO,
 		}));
 
-		return formattedVehiclesList;
+		return formattedVehiclesList || [];
 	}
 
 	static async create(userId: number, vehicleData: INewVehicle) {

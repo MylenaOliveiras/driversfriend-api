@@ -7,7 +7,11 @@ export class VehiclesController {
 			const loggedUser = req.user?.id || 0;
 			const vehiclesList = await VehiclesService.list(loggedUser);
 
-			res.json(vehiclesList);
+			if (vehiclesList.length > 0) {
+				res.json(vehiclesList);
+			} else {
+				res.status(204).send();
+			}
 		} catch (err) {
 			next(err);
 		}
