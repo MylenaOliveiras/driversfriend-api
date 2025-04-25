@@ -27,7 +27,6 @@ const vehicleSchema = z.object({
 	anoFabricacao: z.number().int(),
 	placaVeiculo: z.string(),
 	kmInicial: z.number().int().min(0),
-	dataCadastro: z.string().datetime(),
 	tipo_combustivel: z.nativeEnum(FUEL),
 	tipo_veiculo: z.nativeEnum(TIPO_VEICULO),
 	usuarioId: z.number().int(),

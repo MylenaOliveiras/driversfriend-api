@@ -48,7 +48,16 @@ export class VehiclesService {
 			);
 		}
 
-		await VehiclesRepository.create(userId, vehicleData);
+		const now = new Date();
+		const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+		const isoLocal = localDate.toISOString();
+
+		const data = {
+			...vehicleData,
+			dataCadastro: isoLocal,
+		};
+
+		await VehiclesRepository.create(userId, data);
 
 		return "Veículo cadastrado com sucesso";
 	}
