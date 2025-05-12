@@ -1,5 +1,5 @@
 import { prisma } from "../../prisma/prismaClient";
-import type { INewVehicle } from "../schemas/vehicles.schema";
+import type { INewVehicle, VEHICLE_TYPE } from "../schemas/vehicles.schema";
 import { errorPrismaHandler } from "./utils";
 
 export class VehiclesRepository {
@@ -98,6 +98,20 @@ export class VehiclesRepository {
 					TIPO_VEICULO: vehicleData.tipoVeiculo,
 				},
 			});
+		} catch (error) {
+			errorPrismaHandler(error);
+		}
+	}
+
+	static async getBrands(vehicleType: VEHICLE_TYPE) {
+		try {
+			const brands = await prisma.marca.findMany({
+				where: {
+					TIPO_VEICULO: vehicleType,
+				},
+			});
+
+			return brands;
 		} catch (error) {
 			errorPrismaHandler(error);
 		}

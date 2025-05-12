@@ -7,10 +7,9 @@ export enum FUEL {
 	GNV = "GNV",
 	ELETRICO = "ELETRICO",
 	FLEX = "FLEX",
-	HIBRIDO = "HIBRIDO",
 }
 
-enum TIPO_VEICULO {
+export enum VEHICLE_TYPE {
 	CARRO = "CARRO",
 	MOTO = "MOTO",
 	CAMINHAO = "CAMINHAO",
@@ -29,7 +28,7 @@ const vehicleSchema = z.object({
 	kmInicial: z.number().int().min(0),
 	combustivel: z.nativeEnum(FUEL),
 	dataCadastro: z.string().datetime().nullish(),
-	tipoVeiculo: z.nativeEnum(TIPO_VEICULO),
+	tipoVeiculo: z.nativeEnum(VEHICLE_TYPE),
 	usuarioId: z.number().int(),
 });
 

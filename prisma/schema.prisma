@@ -56,23 +56,23 @@ model tipo_manutencao {
 }
 
 model veiculos {
-  ID               Int               @id @default(autoincrement())
+  ID               Int                        @id @default(autoincrement())
   MARCA_ID         Int?
-  MODELO           String            @db.VarChar(255)
-  COR              String            @db.VarChar(50)
+  MODELO           String                     @db.VarChar(255)
+  COR              String                     @db.VarChar(50)
   ANO_MODELO       Int
   ANO_FABRICACAO   Int
-  PLACA_VEICULO    String            @unique(map: "placa_unica") @db.VarChar(10)
+  PLACA_VEICULO    String                     @unique(map: "placa_unica") @db.VarChar(10)
   KM_INICIAL       Int
-  DATA_CADASTRO    DateTime?         @default(now()) @db.DateTime(0)
-  TIPO_COMBUSTIVEL TIPO_COMBUSTIVEL?
+  DATA_CADASTRO    DateTime?                  @default(now()) @db.DateTime(0)
+  TIPO_COMBUSTIVEL veiculos_TIPO_COMBUSTIVEL?
   USUARIO_ID       Int?
   TIPO_VEICULO     TIPO_VEICULO?
   abastecimentos   abastecimentos[]
   custos           custos[]
   manutencao       manutencao[]
-  USUARIO          usuarios?         @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
-  marca            marca?            @relation(fields: [MARCA_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_veiculos_marca")
+  USUARIO          usuarios?                  @relation(fields: [USUARIO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario")
+  marca            marca?                     @relation(fields: [MARCA_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "fk_veiculos_marca")
 
   @@index([USUARIO_ID], map: "fk_usuario")
   @@index([MARCA_ID], map: "MARCA_ID")
@@ -88,26 +88,18 @@ model usuarios {
 }
 
 model abastecimentos {
-  ID                 Int                              @id @default(autoincrement())
+  ID                 Int       @id @default(autoincrement())
   VEICULO_ID         Int
-  DATA_ABASTECIMENTO DateTime?                        @default(now()) @db.DateTime(0)
-  VALOR_TOTAL        Decimal                          @db.Decimal(10, 2)
-  LITROS_ABASTECIDOS Decimal                          @db.Decimal(10, 2)
-  TIPO_COMBUSTIVEL   abastecimentos_TIPO_COMBUSTIVEL?
+  DATA_ABASTECIMENTO DateTime? @default(now()) @db.DateTime(0)
+  VALOR_TOTAL        Decimal   @db.Decimal(10, 2)
+  LITROS_ABASTECIDOS Decimal?  @db.Decimal(10, 2)
   KM_ATUAL           Int
-  PRECO_LITRO        Decimal                          @db.Decimal(10, 2)
-  veiculos           veiculos                         @relation(fields: [VEICULO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "abastecimentos_ibfk_1")
+  VALOR_UNITARIO     Decimal   @db.Decimal(10, 2)
+  ENERGIA_CONSUMIDA  Decimal?  @db.Decimal(10, 2)
+  OBSERVACAO         String?   @db.VarChar(255)
+  veiculos           veiculos  @relation(fields: [VEICULO_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "abastecimentos_ibfk_1")
 
   @@index([VEICULO_ID], map: "VEICULO")
-}
-
-enum TIPO_COMBUSTIVEL {
-  GASOLINA
-  DIESEL
-  GNV
-  ELETRICO
-  FLEX
-  HIBRIDO
 }
 
 enum TIPO_VEICULO {
@@ -118,11 +110,10 @@ enum TIPO_VEICULO {
   VAN
 }
 
-enum abastecimentos_TIPO_COMBUSTIVEL {
+enum veiculos_TIPO_COMBUSTIVEL {
   GASOLINA
   DIESEL
   GNV
   ELETRICO
   FLEX
-  HIBRIDO
 }

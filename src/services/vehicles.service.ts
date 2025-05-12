@@ -1,13 +1,17 @@
 import type { veiculos } from "@prisma/client";
 import { VehiclesRepository } from "../repositories/vehicles.repository";
-import type { INewVehicle, IVehicleSimple } from "../schemas/vehicles.schema";
+import type {
+	INewVehicle,
+	IVehicleSimple,
+	VEHICLE_TYPE,
+} from "../schemas/vehicles.schema";
 import { AppError } from "../utils/AppError";
 
 export class VehiclesService {
 	static validateOwnership(
 		vehicle: veiculos | null | undefined,
 		userId: number,
-	) {
+	): void {
 		if (!vehicle) {
 			throw new AppError("Veículo não encontrado", 404);
 		}
@@ -124,5 +128,17 @@ export class VehiclesService {
 		};
 
 		return formattedVehiclesList;
+	}
+
+	static async getBrands(vehicleType: VEHICLE_TYPE) {
+		if (!vehicleType) {
+			throw new AppError("Informe o tipo do veículo.", 500);
+		}
+
+		const brands = await VehiclesRepository.getBrands(vehicleType);
+		return brands?.map((b) => ({
+			id: b.ID,
+			nome: b.NOME,
+		}));
 	}
 }

@@ -11,9 +11,10 @@ export class FuelingRepository {
 					VEICULO_ID: vehicleId,
 					DATA_ABASTECIMENTO: fuelingData.dataAbastecimento,
 					VALOR_TOTAL: fuelingData.valorTotal,
-					PRECO_LITRO: fuelingData.precoLitro,
+					VALOR_UNITARIO: fuelingData.valorUnitario,
+					ENERGIA_CONSUMIDA: fuelingData.energiaConsumida,
 					LITROS_ABASTECIDOS: fuelingData.litrosAbastecidos,
-					TIPO_COMBUSTIVEL: fuelingData.tipoCombustivel,
+					OBSERVACAO: fuelingData.observacao,
 				},
 			});
 		} catch (error) {
@@ -27,20 +28,8 @@ export class FuelingRepository {
 				where: {
 					VEICULO_ID: vehicleId,
 				},
-			});
-		} catch (error) {
-			errorPrismaHandler(error);
-		}
-	}
-
-	static async findLastFueling(vehicleId: number) {
-		try {
-			return await prisma.abastecimentos.findFirst({
-				where: {
-					VEICULO_ID: vehicleId,
-				},
 				orderBy: {
-					DATA_ABASTECIMENTO: "desc",
+					DATA_ABASTECIMENTO: "asc",
 				},
 			});
 		} catch (error) {

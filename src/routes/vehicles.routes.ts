@@ -7,9 +7,10 @@ const vehiclesRoutes = Router();
 vehiclesRoutes.get("/", VehiclesController.list);
 vehiclesRoutes.post("/", validateVehicle, VehiclesController.create);
 
+vehiclesRoutes.get("/brands", VehiclesController.getBrands);
+
 vehiclesRoutes.delete("/:vehicleId", VehiclesController.delete);
 vehiclesRoutes.put("/:vehicleId", validateVehicle, VehiclesController.update);
-
 vehiclesRoutes.get("/:vehicleId", VehiclesController.findById);
 
 export default vehiclesRoutes;

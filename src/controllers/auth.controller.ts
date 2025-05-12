@@ -16,8 +16,8 @@ export class AuthController {
 	static async login(req: Request, res: Response, next: NextFunction) {
 		try {
 			const { email, senha } = req.body;
-			const token = await AuthService.login({ email, senha });
-			res.json({ token });
+			const response = await AuthService.login({ email, senha });
+			res.json(response);
 		} catch (err) {
 			console.log("Erro no controller de autenticação:", err);
 			return next(err);
