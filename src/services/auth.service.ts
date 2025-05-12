@@ -36,6 +36,13 @@ export class AuthService {
 			);
 		}
 		const token = generateToken(user.ID);
-		return token;
+		return {
+			token,
+			user: {
+				id: user.ID,
+				nome: user.NOME,
+				email: user.EMAIL,
+			},
+		};
 	}
 }

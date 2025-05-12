@@ -7,10 +7,9 @@ export enum FUEL {
 	GNV = "GNV",
 	ELETRICO = "ELETRICO",
 	FLEX = "FLEX",
-	HIBRIDO = "HIBRIDO",
 }
 
-enum TIPO_VEICULO {
+export enum VEHICLE_TYPE {
 	CARRO = "CARRO",
 	MOTO = "MOTO",
 	CAMINHAO = "CAMINHAO",
@@ -29,7 +28,7 @@ const vehicleSchema = z.object({
 	kmInicial: z.number().int().min(0),
 	combustivel: z.nativeEnum(FUEL),
 	dataCadastro: z.string().datetime().nullish(),
-	tipoVeiculo: z.nativeEnum(TIPO_VEICULO),
+	tipoVeiculo: z.nativeEnum(VEHICLE_TYPE),
 	usuarioId: z.number().int(),
 });
 
@@ -39,6 +38,12 @@ const vehicleSchemaSimple = vehicleSchema.pick({
 	modelo: true,
 });
 
+const brandSchema = z.object({
+	id: z.number(),
+	nome: z.string(),
+	tipoVeiculo: z.nativeEnum(VEHICLE_TYPE),
+});
+
 const newVehicleSchema = vehicleSchema.omit({ id: true, usuarioId: true });
 
 export const validateVehicle = validateSchema(newVehicleSchema);
@@ -46,3 +51,5 @@ export const validateVehicle = validateSchema(newVehicleSchema);
 export type INewVehicle = z.infer<typeof newVehicleSchema>;
 export type IVehicle = z.infer<typeof vehicleSchema>;
 export type IVehicleSimple = z.infer<typeof vehicleSchemaSimple>;
+
+export type IBrand = z.infer<typeof brandSchema>;

@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import type { VEHICLE_TYPE } from "../schemas/vehicles.schema";
 import { VehiclesService } from "../services/vehicles.service";
 
 export class VehiclesController {
@@ -64,6 +65,17 @@ export class VehiclesController {
 			res.status(200).json(vehicle);
 		} catch (err) {
 			next(err);
+		}
+	}
+
+	static async getBrands(req: Request, res: Response, next: NextFunction) {
+		try {
+			const vehicleType = req.query.vehicleType as VEHICLE_TYPE;
+			const brands = await VehiclesService.getBrands(vehicleType);
+
+			res.status(200).json(brands);
+		} catch (error) {
+			next(error);
 		}
 	}
 }

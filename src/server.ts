@@ -4,6 +4,7 @@ import express from "express";
 import { authMiddleware } from "./middlewares/authMiddleware";
 import { errorHandler } from "./middlewares/errorHandlers";
 import authRoutes from "./routes/auth.routes";
+import consumptionRouter from "./routes/averageConsumption.routes";
 import fuelingRoutes from "./routes/fueling.routes";
 import vehiclesRoutes from "./routes/vehicles.routes";
 
@@ -25,6 +26,7 @@ app.get("/", (_req, res) => {
 app.use("/auth", authRoutes);
 app.use("/vehicles", authMiddleware, vehiclesRoutes);
 app.use("/fueling", authMiddleware, fuelingRoutes);
+app.use("/consumption", authMiddleware, consumptionRouter);
 
 app.use(errorHandler);
 app.use((req, res) => {
